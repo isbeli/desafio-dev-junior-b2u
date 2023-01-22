@@ -3,10 +3,12 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 
+const routerUser = require("./routes/user");
+
 /*server port */
 const port = process.env.PORT || 5000;
 
-/* Coneccion MongoDB*/
+/* Connection MongoDB*/
 const mongoUrl = process.env.MONGO_DB;
 
 mongoose.set("strictQuery", false);
@@ -19,9 +21,16 @@ mongoose.connect(mongoUrl)
             console.error('Database connection error')
         });
 
+/* Accept form and json formats */
+app.use(express.json());
+app.use(express.urlencoded({ extended: false}));
+
+/* routes */
 app.get('/',(req, res) => {
     res.send(`<h1>Server is on</h1>`)
-})
+});
+
+app.use("/user",routerUser);
 
 app.listen(port, () => {
     console.log('Server running on port ' + port)
