@@ -1,6 +1,7 @@
 const express   = require("express")
 const router    = express.Router()
 const User      = require("../models/user")
+const Vehicle   = require("../models/vehicle")
 const jwt       = require("../middlewares/jwt")
 const middle    = require("../middlewares/authentication") //middleware
 const validator = require('validator');
@@ -108,6 +109,21 @@ router.put('/:id', middle.authentication, async (req, res, next) => {
 router.delete('/:id', middle.authentication, async (req, res) => {
     await User.findByIdAndDelete(req.params.id);
     res.send("User whit id:"+req.params.id+" deleted" )
+});
+
+router.get("/:id/vehicles", middle.authentication, async(req,res)=>{
+    try {
+        if(validator.isMongoId(req.params.id)){
+            const vehicles = await Vehicle.find({owner: req.params.id})
+            res.status(200).send(vehicles)
+        }else{
+            res.status(400).send("invalid user id")
+        }
+    
+    } catch (error) {
+        console.log(error)
+        res.status(400).send("error getting vehicles")
+    }
 });
 
 function save_edit(path){

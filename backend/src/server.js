@@ -4,6 +4,7 @@ const app = express();
 const mongoose = require('mongoose');
 
 const routerUser = require("./routes/user");
+const routerVehicle = require("./routes/vehicle");
 
 /*server port */
 const port = process.env.PORT || 5000;
@@ -31,6 +32,7 @@ app.get('/',(req, res) => {
 });
 
 app.use("/user",routerUser);
+app.use("/vehicle",routerVehicle);
 
 app.listen(port, () => {
     console.log('Server running on port ' + port)
